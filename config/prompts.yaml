@@ -1,0 +1,100 @@
+prompts:
+  - agent_name: head_of_data
+    file_path: prompts/system/head_of_data.md
+    version: "1.0.0"
+    description: Master coordinator and manager agent overseeing all OMDT operations.
+
+  - agent_name: triage_agent
+    file_path: prompts/system/triage_agent.md
+    version: "1.0.0"
+    description: Intake and triage agent for converting requests into structured work items.
+
+  - agent_name: data_pm
+    file_path: prompts/system/data_pm.md
+    version: "1.0.0"
+    description: Data product manager for PRD drafting, scoping, and stakeholder alignment.
+
+  - agent_name: data_pmo
+    file_path: prompts/system/data_pmo.md
+    version: "1.0.0"
+    description: Project management office agent for tracking milestones and delivery.
+
+  - agent_name: data_analyst
+    file_path: prompts/system/data_analyst.md
+    version: "1.0.0"
+    description: Data analyst agent for queries, dashboards, and ad-hoc analysis.
+
+  - agent_name: data_engineer
+    file_path: prompts/system/data_engineer.md
+    version: "1.0.0"
+    description: Data engineer agent for pipeline building, orchestration, and data modeling.
+
+  - agent_name: data_architect
+    file_path: prompts/system/data_architect.md
+    version: "1.0.0"
+    description: Data architect agent for schema design, lineage, and governance.
+
+  - agent_name: data_scientist
+    file_path: prompts/system/data_scientist.md
+    version: "1.0.0"
+    description: Data scientist agent for modeling, experimentation, and ML workflows.
+
+  - agent_name: academic_research_agent
+    file_path: prompts/system/academic_research_agent.md
+    version: "1.0.0"
+    description: Academic agent for paper ingestion, literature reviews, and research briefs.
+
+  - agent_name: technical_writer_agent
+    file_path: prompts/system/technical_writer_agent.md
+    version: "1.0.0"
+    description: Technical writer for runbooks, release notes, memos, and user guides.
+
+  - agent_name: training_enablement_agent
+    file_path: prompts/system/training_enablement_agent.md
+    version: "1.0.0"
+    description: Training agent for onboarding, learning paths, and enablement materials.
+
+  - agent_name: data_quality_agent
+    file_path: prompts/system/data_quality_agent.md
+    version: "1.0.0"
+    description: Data quality agent for validation rules, anomaly detection, and profiling.
+
+  - agent_name: ml_engineering_agent
+    file_path: prompts/system/ml_engineering_agent.md
+    version: "1.0.0"
+    description: ML engineering agent for model training, evaluation, and deployment.
+
+  - agent_name: mlops_agent
+    file_path: prompts/system/mlops_agent.md
+    version: "1.0.0"
+    description: MLOps agent for model serving, monitoring, and lifecycle management.
+
+  - agent_name: pipeline_manager
+    file_path: prompts/system/pipeline_manager.md
+    version: "1.0.0"
+    description: Pipeline manager for scheduling, dependency tracking, and run monitoring.
+
+  - agent_name: deployment_agent
+    file_path: prompts/system/deployment_agent.md
+    version: "1.0.0"
+    description: Deployment agent for release orchestration and environment promotion.
+
+  - agent_name: access_security_agent
+    file_path: prompts/system/access_security_agent.md
+    version: "1.0.0"
+    description: Access and security agent for provisioning, RBAC, and credential management.
+
+  - agent_name: vendor_finops_agent
+    file_path: prompts/system/vendor_finops_agent.md
+    version: "1.0.0"
+    description: Vendor and FinOps agent for cost attribution, usage tracking, and procurement.
+
+  - agent_name: comms_publishing_agent
+    file_path: prompts/system/comms_publishing_agent.md
+    version: "1.0.0"
+    description: Communications agent for email, Slack, and stakeholder publishing.
+
+  - agent_name: coding_agent
+    file_path: prompts/system/coding_agent.md
+    version: "1.0.0"
+    description: Coding agent for code generation, review, and refactoring tasks.

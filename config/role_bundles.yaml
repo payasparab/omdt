@@ -1,0 +1,75 @@
+role_bundles:
+  analyst_readonly:
+    allowed_databases:
+      - analytics
+      - reporting
+    warehouse_defaults:
+      warehouse: ANALYST_WH
+      size: X-SMALL
+    approval_threshold: none
+    expiration_policy:
+      days: 90
+      review_cadence_days: 30
+
+  engineer_transform:
+    allowed_databases:
+      - raw
+      - staging
+      - analytics
+    warehouse_defaults:
+      warehouse: TRANSFORM_WH
+      size: SMALL
+    approval_threshold: operator
+    expiration_policy:
+      days: 180
+      review_cadence_days: 60
+
+  architect_metadata_admin:
+    allowed_databases:
+      - raw
+      - staging
+      - analytics
+      - metadata
+    warehouse_defaults:
+      warehouse: ADMIN_WH
+      size: SMALL
+    approval_threshold: admin
+    expiration_policy:
+      days: 365
+      review_cadence_days: 90
+
+  scientist_sandbox:
+    allowed_databases:
+      - analytics
+      - sandbox
+    warehouse_defaults:
+      warehouse: SCIENCE_WH
+      size: MEDIUM
+    approval_threshold: operator
+    expiration_policy:
+      days: 90
+      review_cadence_days: 30
+
+  pipeline_operator:
+    allowed_databases:
+      - raw
+      - staging
+      - analytics
+    warehouse_defaults:
+      warehouse: PIPELINE_WH
+      size: SMALL
+    approval_threshold: operator
+    expiration_policy:
+      days: 180
+      review_cadence_days: 60
+
+  admin_breakglass:
+    allowed_databases:
+      - "*"
+    warehouse_defaults:
+      warehouse: ADMIN_WH
+      size: MEDIUM
+    approval_threshold: admin
+    expiration_policy:
+      days: 1
+      review_cadence_days: 1

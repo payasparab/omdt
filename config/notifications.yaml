@@ -1,0 +1,31 @@
+routing_groups:
+  operators:
+    members:
+      - payas.parab
+    channels:
+      - email
+      - linear
+
+  stakeholders:
+    members: []
+    channels:
+      - email
+
+defaults:
+  channel: email
+  urgent_channel: email
+  batch_interval_minutes: 15
+
+escalation_rules:
+  - trigger: approval_timeout
+    timeout_minutes: 60
+    escalate_to: operators
+    channel: email
+
+  - trigger: pipeline_failure
+    escalate_to: operators
+    channel: email
+
+  - trigger: security_alert
+    escalate_to: operators
+    channel: email

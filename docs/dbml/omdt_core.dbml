@@ -1,0 +1,132 @@
+// OMDT Core Database Schema (V1 — slim)
+// 10 tables. Additional tables added via migrations as features ship.
+
+Table projects {
+  id uuid [pk]
+  key varchar [unique, not null]
+  name varchar [not null]
+  state varchar [not null, default: 'new']
+  owner_person_key varchar
+  linear_project_id varchar
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+}
+
+Table work_items {
+  id uuid [pk]
+  project_id uuid [ref: > projects.id]
+  title varchar [not null]
+  description text
+  work_type varchar [not null]
+  canonical_state varchar [not null, default: 'new']
+  priority varchar [not null, default: 'medium']
+  source_channel varchar
+  source_external_id varchar
+  requester_person_key varchar
+  owner_person_key varchar
+  route_key varchar
+  risk_level varchar
+  due_at timestamptz
+  requires_approval boolean [default: false]
+  latest_prd_revision_id uuid
+  linear_issue_id varchar
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  closed_at timestamptz
+}
+
+Table artifacts {
+  id uuid [pk]
+  artifact_type varchar [not null]
+  version varchar
+  storage_uri varchar [not null]
+  mime_type varchar
+  hash_sha256 varchar(64) [not null]
+  created_by_actor varchar
+  source_run_id uuid
+  linked_object_type varchar
+  linked_object_id uuid
+  approval_status varchar [not null, default: 'pending']
+  published_at timestamptz
+  created_at timestamptz [not null, default: `now()`]
+}
+
+Table artifact_links {
+  id uuid [pk]
+  artifact_id uuid [not null, ref: > artifacts.id]
+  linked_object_type varchar [not null]
+  linked_object_id uuid [not null]
+  created_at timestamptz [not null, default: `now()`]
+}
+
+Table conversation_threads {
+  id uuid [pk]
+  work_item_id uuid [not null, ref: > work_items.id]
+  source_channel varchar
+  source_external_id varchar
+  status varchar [not null, default: 'open']
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+}
+
+Table conversation_messages {
+  id uuid [pk]
+  conversation_thread_id uuid [not null, ref: > conversation_threads.id]
+  actor_id varchar [not null]
+  actor_type varchar [not null]
+  content text [not null]
+  source_channel varchar
+  message_hash varchar
+  created_at timestamptz [not null, default: `now()`]
+}
+
+Table prd_revisions {
+  id uuid [pk]
+  work_item_id uuid [not null, ref: > work_items.id]
+  revision_number int [not null]
+  artifact_id uuid [ref: > artifacts.id]
+  status varchar [not null, default: 'pending']
+  created_at timestamptz [not null, default: `now()`]
+}
+
+Table identity_people {
+  id uuid [pk]
+  person_key varchar [unique, not null]
+  display_name varchar [not null]
+  primary_email varchar [unique, not null]
+  alternate_emails json
+  outlook_upn varchar
+  roles json
+  preferred_notification_channel varchar [not null, default: 'email']
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+}
+
+Table audit_events {
+  id uuid [pk]
+  sequence_number bigint [unique, not null]
+  event_time timestamptz [not null, default: `now()`]
+  event_name varchar [not null]
+  actor_type varchar [not null]
+  actor_id varchar [not null]
+  correlation_id varchar [not null]
+  object_type varchar [not null]
+  object_id varchar [not null]
+  change_summary text [not null]
+  tool_name varchar
+  approval_id varchar
+  prev_event_hash varchar
+  event_hash varchar [not null]
+  created_at timestamptz [not null, default: `now()`]
+}
+
+Table linear_links {
+  id uuid [pk]
+  omdt_object_type varchar [not null]
+  omdt_object_id uuid [not null]
+  linear_object_type varchar [not null]
+  linear_object_id varchar [not null]
+  last_sync_at timestamptz
+  sync_hash varchar
+  created_at timestamptz [not null, default: `now()`]
+}

@@ -1,0 +1,58 @@
+teams:
+  - key: DATA
+    name: Data Team
+    default_assignee: payas.parab
+
+state_mappings:
+  NEW: New
+  TRIAGE: Triage
+  NEEDS_CLARIFICATION: Needs Clarification
+  PRD_DRAFTING: PRD Drafting
+  PRD_REVIEW: PRD Review
+  APPROVAL_PENDING: Approval Pending
+  APPROVED: Approved
+  READY_FOR_BUILD: Ready for Build
+  IN_PROGRESS: In Progress
+  BLOCKED: Blocked
+  VALIDATION: Validation
+  DEPLOYMENT_PENDING: Deployment Pending
+  DEPLOYED: Deployed
+  DONE: Done
+  ARCHIVED: Archived
+
+priority_mappings:
+  critical: 1
+  high: 2
+  medium: 3
+  low: 4
+  none: 0
+
+label_catalog:
+  - name: bug
+    color: "#e11d48"
+  - name: feature
+    color: "#2563eb"
+  - name: pipeline
+    color: "#7c3aed"
+  - name: access-request
+    color: "#059669"
+  - name: research
+    color: "#d97706"
+  - name: documentation
+    color: "#6b7280"
+  - name: security
+    color: "#dc2626"
+  - name: data-quality
+    color: "#0891b2"
+
+sync_rules:
+  direction: bidirectional
+  sync_interval_seconds: 60
+  conflict_resolution: omdt_wins
+  allowed_bidirectional_fields:
+    - state
+    - assignee
+    - priority
+    - title
+    - description
+    - labels

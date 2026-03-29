@@ -1,0 +1,19 @@
+people:
+  - person_key: payas.parab
+    display_name: Payas Parab
+    primary_email: payas@example.com
+    alternate_emails: []
+    github:
+      username: payasparab
+      user_id: null
+      team_slugs:
+        - data-team
+    linear:
+      user_id: "lin_user_001"
+      display_name: Payas Parab
+      team_keys:
+        - DATA
+    roles:
+      - operator
+      - admin
+    preferred_notification_channel: email

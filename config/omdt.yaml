@@ -1,0 +1,26 @@
+app:
+  name: omdt
+  version: "0.1.0"
+  environment: development
+  debug: true
+  default_timezone: UTC
+
+database:
+  url: ${OMDT_DATABASE_URL:-postgresql+asyncpg://localhost:5432/omdt}
+
+redis:
+  url: ${OMDT_REDIS_URL:-redis://localhost:6379/0}
+
+secret_manager:
+  type: env  # env | vault | aws_secrets_manager
+
+adapters:
+  enabled:
+    - linear
+    - snowflake
+    - notion
+    - outlook
+    - github
+    - lovable
+    - gamma
+    - render

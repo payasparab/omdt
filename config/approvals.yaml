@@ -1,0 +1,54 @@
+approval_rules:
+  - action_class: production_deploy
+    require_approval: true
+    min_approvers: 1
+    allowed_approvers:
+      - operator
+      - admin
+    auto_approve_if: null
+
+  - action_class: access_grant
+    require_approval: true
+    min_approvers: 1
+    allowed_approvers:
+      - operator
+      - admin
+    auto_approve_if: null
+
+  - action_class: secrets_change
+    require_approval: true
+    min_approvers: 1
+    allowed_approvers:
+      - admin
+    auto_approve_if: null
+
+  - action_class: vendor_commitment
+    require_approval: true
+    min_approvers: 1
+    allowed_approvers:
+      - operator
+      - admin
+    auto_approve_if: null
+
+  - action_class: external_send
+    require_approval: true
+    min_approvers: 1
+    allowed_approvers:
+      - operator
+      - admin
+    auto_approve_if: null
+
+  - action_class: destructive_operation
+    require_approval: true
+    min_approvers: 1
+    allowed_approvers:
+      - admin
+    auto_approve_if: null
+
+  - action_class: prompt_change
+    require_approval: true
+    min_approvers: 1
+    allowed_approvers:
+      - operator
+      - admin
+    auto_approve_if: null

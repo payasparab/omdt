@@ -1,0 +1,39 @@
+coverage:
+  overall_threshold: 90
+  critical_module_threshold: 95
+  critical_modules:
+    - app.workflows
+    - app.core.audit
+    - app.jobs.linear_sync
+    - app.core.config
+    - app.services.approvals
+    - app.domain.policies
+
+component_test_requirements:
+  - module: app.agents
+    markers: [component]
+    min_coverage: 90
+  - module: app.adapters
+    markers: [contract]
+    min_coverage: 90
+  - module: app.workflows
+    markers: [component, workflows]
+    min_coverage: 95
+  - module: app.core
+    markers: [unit]
+    min_coverage: 95
+  - module: app.schemas
+    markers: [unit]
+    min_coverage: 95
+  - module: app.services
+    markers: [unit, component]
+    min_coverage: 90
+
+marker_policy:
+  required_markers:
+    - unit
+    - contract
+    - integration
+    - component
+    - e2e
+  enforce_marker_on_all_tests: true
