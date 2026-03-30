@@ -6,8 +6,11 @@ import os
 from logging.config import fileConfig
 
 from alembic import context
+from dotenv import load_dotenv
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
+
+load_dotenv()
 
 # Import Base with all tables registered
 from app.db.base import Base  # noqa: F401

@@ -4,7 +4,6 @@ from __future__ import annotations
 from datetime import datetime
 
 from sqlalchemy import DateTime, ForeignKey, String, Text, func
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.tables.base import Base, UUIDPrimaryKeyMixin
@@ -14,7 +13,7 @@ class ConversationMessageRow(UUIDPrimaryKeyMixin, Base):
     __tablename__ = "conversation_messages"
 
     conversation_thread_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("conversation_threads.id"), nullable=False
+        String(36), ForeignKey("conversation_threads.id"), nullable=False
     )
     actor_id: Mapped[str] = mapped_column(String, nullable=False)
     actor_type: Mapped[str] = mapped_column(String, nullable=False)

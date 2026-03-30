@@ -9,7 +9,6 @@ from typing import Sequence, Union
 
 import sqlalchemy as sa
 from alembic import op
-from sqlalchemy.dialects import postgresql
 
 revision: str = "001"
 down_revision: Union[str, None] = None
@@ -21,7 +20,7 @@ def upgrade() -> None:
     # --- projects ---
     op.create_table(
         "projects",
-        sa.Column("id", postgresql.UUID(as_uuid=False), primary_key=True),
+        sa.Column("id", sa.String(36), primary_key=True),
         sa.Column("key", sa.String, unique=True, nullable=False),
         sa.Column("name", sa.String, nullable=False),
         sa.Column("state", sa.String, nullable=False, server_default="new"),
@@ -34,8 +33,8 @@ def upgrade() -> None:
     # --- work_items ---
     op.create_table(
         "work_items",
-        sa.Column("id", postgresql.UUID(as_uuid=False), primary_key=True),
-        sa.Column("project_id", postgresql.UUID(as_uuid=False), sa.ForeignKey("projects.id"), nullable=True),
+        sa.Column("id", sa.String(36), primary_key=True),
+        sa.Column("project_id", sa.String(36), sa.ForeignKey("projects.id"), nullable=True),
         sa.Column("title", sa.String, nullable=False),
         sa.Column("description", sa.Text, nullable=True),
         sa.Column("work_type", sa.String, nullable=False),
@@ -49,7 +48,7 @@ def upgrade() -> None:
         sa.Column("risk_level", sa.String, nullable=True),
         sa.Column("due_at", sa.DateTime(timezone=True), nullable=True),
         sa.Column("requires_approval", sa.Boolean, server_default="false"),
-        sa.Column("latest_prd_revision_id", postgresql.UUID(as_uuid=False), nullable=True),
+        sa.Column("latest_prd_revision_id", sa.String(36), nullable=True),
         sa.Column("linear_issue_id", sa.String, nullable=True),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
         sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
@@ -59,16 +58,16 @@ def upgrade() -> None:
     # --- artifacts ---
     op.create_table(
         "artifacts",
-        sa.Column("id", postgresql.UUID(as_uuid=False), primary_key=True),
+        sa.Column("id", sa.String(36), primary_key=True),
         sa.Column("artifact_type", sa.String, nullable=False),
         sa.Column("version", sa.String, nullable=True),
         sa.Column("storage_uri", sa.String, nullable=False),
         sa.Column("mime_type", sa.String, nullable=True),
         sa.Column("hash_sha256", sa.String(64), nullable=False),
         sa.Column("created_by_actor", sa.String, nullable=True),
-        sa.Column("source_run_id", postgresql.UUID(as_uuid=False), nullable=True),
+        sa.Column("source_run_id", sa.String(36), nullable=True),
         sa.Column("linked_object_type", sa.String, nullable=True),
-        sa.Column("linked_object_id", postgresql.UUID(as_uuid=False), nullable=True),
+        sa.Column("linked_object_id", sa.String(36), nullable=True),
         sa.Column("approval_status", sa.String, nullable=False, server_default="pending"),
         sa.Column("published_at", sa.DateTime(timezone=True), nullable=True),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
@@ -77,18 +76,18 @@ def upgrade() -> None:
     # --- artifact_links ---
     op.create_table(
         "artifact_links",
-        sa.Column("id", postgresql.UUID(as_uuid=False), primary_key=True),
-        sa.Column("artifact_id", postgresql.UUID(as_uuid=False), sa.ForeignKey("artifacts.id"), nullable=False),
+        sa.Column("id", sa.String(36), primary_key=True),
+        sa.Column("artifact_id", sa.String(36), sa.ForeignKey("artifacts.id"), nullable=False),
         sa.Column("linked_object_type", sa.String, nullable=False),
-        sa.Column("linked_object_id", postgresql.UUID(as_uuid=False), nullable=False),
+        sa.Column("linked_object_id", sa.String(36), nullable=False),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
     )
 
     # --- conversation_threads ---
     op.create_table(
         "conversation_threads",
-        sa.Column("id", postgresql.UUID(as_uuid=False), primary_key=True),
-        sa.Column("work_item_id", postgresql.UUID(as_uuid=False), sa.ForeignKey("work_items.id"), nullable=False),
+        sa.Column("id", sa.String(36), primary_key=True),
+        sa.Column("work_item_id", sa.String(36), sa.ForeignKey("work_items.id"), nullable=False),
         sa.Column("source_channel", sa.String, nullable=True),
         sa.Column("source_external_id", sa.String, nullable=True),
         sa.Column("status", sa.String, nullable=False, server_default="open"),
@@ -99,8 +98,8 @@ def upgrade() -> None:
     # --- conversation_messages ---
     op.create_table(
         "conversation_messages",
-        sa.Column("id", postgresql.UUID(as_uuid=False), primary_key=True),
-        sa.Column("conversation_thread_id", postgresql.UUID(as_uuid=False), sa.ForeignKey("conversation_threads.id"), nullable=False),
+        sa.Column("id", sa.String(36), primary_key=True),
+        sa.Column("conversation_thread_id", sa.String(36), sa.ForeignKey("conversation_threads.id"), nullable=False),
         sa.Column("actor_id", sa.String, nullable=False),
         sa.Column("actor_type", sa.String, nullable=False),
         sa.Column("content", sa.Text, nullable=False),
@@ -112,10 +111,10 @@ def upgrade() -> None:
     # --- prd_revisions ---
     op.create_table(
         "prd_revisions",
-        sa.Column("id", postgresql.UUID(as_uuid=False), primary_key=True),
-        sa.Column("work_item_id", postgresql.UUID(as_uuid=False), sa.ForeignKey("work_items.id"), nullable=False),
+        sa.Column("id", sa.String(36), primary_key=True),
+        sa.Column("work_item_id", sa.String(36), sa.ForeignKey("work_items.id"), nullable=False),
         sa.Column("revision_number", sa.Integer, nullable=False),
-        sa.Column("artifact_id", postgresql.UUID(as_uuid=False), sa.ForeignKey("artifacts.id"), nullable=True),
+        sa.Column("artifact_id", sa.String(36), sa.ForeignKey("artifacts.id"), nullable=True),
         sa.Column("status", sa.String, nullable=False, server_default="pending"),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
     )
@@ -123,13 +122,13 @@ def upgrade() -> None:
     # --- identity_people ---
     op.create_table(
         "identity_people",
-        sa.Column("id", postgresql.UUID(as_uuid=False), primary_key=True),
+        sa.Column("id", sa.String(36), primary_key=True),
         sa.Column("person_key", sa.String, unique=True, nullable=False),
         sa.Column("display_name", sa.String, nullable=False),
         sa.Column("primary_email", sa.String, unique=True, nullable=False),
-        sa.Column("alternate_emails", postgresql.JSON, nullable=True),
+        sa.Column("alternate_emails", sa.JSON, nullable=True),
         sa.Column("outlook_upn", sa.String, nullable=True),
-        sa.Column("roles", postgresql.JSON, nullable=True),
+        sa.Column("roles", sa.JSON, nullable=True),
         sa.Column("preferred_notification_channel", sa.String, nullable=False, server_default="email"),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
         sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
@@ -138,7 +137,7 @@ def upgrade() -> None:
     # --- audit_events ---
     op.create_table(
         "audit_events",
-        sa.Column("id", postgresql.UUID(as_uuid=False), primary_key=True),
+        sa.Column("id", sa.String(36), primary_key=True),
         sa.Column("sequence_number", sa.BigInteger, unique=True, nullable=False),
         sa.Column("event_time", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
         sa.Column("event_name", sa.String, nullable=False),
@@ -158,9 +157,9 @@ def upgrade() -> None:
     # --- linear_links ---
     op.create_table(
         "linear_links",
-        sa.Column("id", postgresql.UUID(as_uuid=False), primary_key=True),
+        sa.Column("id", sa.String(36), primary_key=True),
         sa.Column("omdt_object_type", sa.String, nullable=False),
-        sa.Column("omdt_object_id", postgresql.UUID(as_uuid=False), nullable=False),
+        sa.Column("omdt_object_id", sa.String(36), nullable=False),
         sa.Column("linear_object_type", sa.String, nullable=False),
         sa.Column("linear_object_id", sa.String, nullable=False),
         sa.Column("last_sync_at", sa.DateTime(timezone=True), nullable=True),

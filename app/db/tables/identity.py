@@ -1,8 +1,7 @@
 """identity_people table."""
 from __future__ import annotations
 
-from sqlalchemy import String
-from sqlalchemy.dialects.postgresql import JSON
+from sqlalchemy import JSON, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.tables.base import Base, TimestampMixin, UUIDPrimaryKeyMixin

@@ -4,7 +4,6 @@ from __future__ import annotations
 from datetime import datetime
 
 from sqlalchemy import Boolean, DateTime, ForeignKey, String, Text
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.tables.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
@@ -14,7 +13,7 @@ class WorkItemRow(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     __tablename__ = "work_items"
 
     project_id: Mapped[str | None] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("projects.id"), nullable=True
+        String(36), ForeignKey("projects.id"), nullable=True
     )
     title: Mapped[str] = mapped_column(String, nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
@@ -30,7 +29,7 @@ class WorkItemRow(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     due_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     requires_approval: Mapped[bool] = mapped_column(Boolean, default=False)
     latest_prd_revision_id: Mapped[str | None] = mapped_column(
-        UUID(as_uuid=False), nullable=True
+        String(36), nullable=True
     )
     linear_issue_id: Mapped[str | None] = mapped_column(String, nullable=True)
     closed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
