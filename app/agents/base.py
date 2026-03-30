@@ -76,6 +76,10 @@ class BaseAgent(ABC):
 
     def validate_outputs(self, outputs: dict[str, Any]) -> bool:
         """Return True if *outputs* conform to the agent's output schema."""
+        from pydantic import BaseModel as _BM
+
+        if self.output_schema is _BM:
+            return True  # no schema constraint
         try:
             self.output_schema.model_validate(outputs)
             return True

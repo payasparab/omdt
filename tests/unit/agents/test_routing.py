@@ -77,5 +77,5 @@ class TestRouteMappingCompleteness:
         for wt in WorkItemType:
             assert wt.value in ROUTE_TO_AGENT, f"{wt.value} missing from ROUTE_TO_AGENT"
 
-    def test_route_map_has_13_entries(self) -> None:
-        assert len(ROUTE_TO_AGENT) == 13
+    def test_route_map_has_18_entries(self) -> None:
+        assert len(ROUTE_TO_AGENT) == 18

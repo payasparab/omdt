@@ -22,6 +22,12 @@ ROUTE_TO_AGENT: dict[str, str] = {
     "vendor_or_procurement": "vendor_finops_agent",
     "status_or_reporting": "data_pmo",
     "unknown_needs_clarification": "triage_agent",
+    # Aliases for shorter/generic work item types
+    "task": "triage_agent",
+    "bug": "data_engineer",
+    "deployment": "deployment_agent",
+    "pipeline": "data_engineer",
+    "incident": "data_engineer",
 }
 
 # WorkItemType enum -> agent (convenience mapping)
@@ -39,6 +45,11 @@ WORK_ITEM_TYPE_TO_AGENT: dict[WorkItemType, str] = {
     WorkItemType.VENDOR_OR_PROCUREMENT: "vendor_finops_agent",
     WorkItemType.STATUS_OR_REPORTING: "data_pmo",
     WorkItemType.UNKNOWN_NEEDS_CLARIFICATION: "triage_agent",
+    WorkItemType.TASK: "triage_agent",
+    WorkItemType.BUG: "data_engineer",
+    WorkItemType.DEPLOYMENT: "deployment_agent",
+    WorkItemType.PIPELINE: "data_engineer",
+    WorkItemType.INCIDENT: "data_engineer",
 }
 
 DEFAULT_CONFIDENCE_THRESHOLD: float = 0.6
