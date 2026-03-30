@@ -180,3 +180,52 @@ try:
     app.include_router(approvals_router)
 except (ImportError, ModuleNotFoundError):
     pass
+
+try:
+    from app.api.routers.linear import router as linear_router
+
+    app.include_router(linear_router)
+except (ImportError, ModuleNotFoundError):
+    pass
+
+try:
+    from app.api.routers.projects import router as projects_router
+
+    app.include_router(projects_router)
+except (ImportError, ModuleNotFoundError):
+    pass
+
+try:
+    from app.api.routers.pipelines import router as pipelines_router
+
+    app.include_router(pipelines_router)
+except (ImportError, ModuleNotFoundError):
+    pass
+
+try:
+    from app.api.routers.deployments import router as deployments_router
+
+    app.include_router(deployments_router)
+except (ImportError, ModuleNotFoundError):
+    pass
+
+try:
+    from app.api.routers.access import router as access_router
+
+    app.include_router(access_router)
+except (ImportError, ModuleNotFoundError):
+    pass
+
+try:
+    from app.api.routers.audit import router as audit_router
+
+    app.include_router(audit_router)
+except (ImportError, ModuleNotFoundError):
+    pass
+
+try:
+    from app.api.routers.status import router as status_router
+
+    app.include_router(status_router)
+except (ImportError, ModuleNotFoundError):
+    pass

@@ -1,0 +1,84 @@
+name: Upgrade Validation
+
+on:
+  pull_request:
+    paths:
+      - "pyproject.toml"
+      - "requirements*.txt"
+      - "*.lock"
+      - "poetry.lock"
+      - "pdm.lock"
+
+jobs:
+  validate-upgrade:
+    name: Validate dependency upgrade
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Dependency resolution check
+        run: |
+          pip install -e ".[dev]" --dry-run 2>&1 | tail -20
+          pip install -e ".[dev]"
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Format check
+        run: ruff format --check .
+
+      - name: Type check
+        run: mypy app/
+
+      - name: Unit tests
+        run: pytest tests/unit/ -q
+
+      - name: Contract tests
+        run: |
+          if [ -d tests/contract ] && [ "$(find tests/contract -name 'test_*.py' | head -1)" ]; then
+            pytest tests/contract/ -q
+          else
+            echo "No contract tests found — skipping"
+          fi
+
+      - name: Workflow tests
+        run: pytest tests/workflows/ -q
+
+      - name: Config tests
+        run: pytest tests/config/ -q
+
+      - name: Migration tests
+        run: |
+          if [ -d tests/migrations ] && [ "$(find tests/migrations -name 'test_*.py' | head -1)" ]; then
+            pytest tests/migrations/ -q
+          else
+            echo "No migration tests found — skipping"
+          fi
+
+      - name: Adapter contract tests
+        run: |
+          if [ -d tests/adapters ] && [ "$(find tests/adapters -name 'test_*.py' | head -1)" ]; then
+            pytest tests/adapters/ -q
+          else
+            echo "No adapter contract tests found — skipping"
+          fi
+
+      - name: Snapshot regression tests
+        run: |
+          if [ -d tests/snapshot ] && [ "$(find tests/snapshot -name 'test_*.py' | head -1)" ]; then
+            pytest tests/snapshot/ -q
+          else
+            echo "No snapshot tests found — skipping"
+          fi
+
+      - name: Security scan
+        run: bandit -r app/ -c pyproject.toml
+
+      - name: Dependency audit
+        run: pip-audit

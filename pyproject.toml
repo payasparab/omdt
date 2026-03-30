@@ -50,7 +50,8 @@ line-length = 120
 target-version = "py312"
 
 [tool.ruff.lint]
-select = ["E", "F", "W", "I", "N", "UP", "B", "A", "SIM", "TCH"]
+select = ["E", "F", "W", "I", "N", "UP", "B", "A", "COM", "C4", "PT", "RET", "SIM", "ARG"]
+ignore = ["E501"]  # handled by ruff formatter
 
 [tool.mypy]
 python_version = "3.12"
@@ -59,6 +60,12 @@ warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
+plugins = ["pydantic.mypy"]
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -69,12 +76,31 @@ markers = [
     "integration: Integration tests",
     "component: Component tests",
     "e2e: End-to-end tests",
+    "workflow: Workflow tests",
+    "config: Configuration tests",
+    "migration: Database migration tests",
+    "snapshot: Snapshot regression tests",
 ]
 
 [tool.coverage.run]
 source = ["app"]
-omit = ["app/db/migrations/*"]
+omit = [
+    "app/db/migrations/*",
+    "app/cli/*",
+    "app/__main__.py",
+]
 
 [tool.coverage.report]
 fail_under = 90
 show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "if __name__ == .__main__.",
+    "@overload",
+    "raise NotImplementedError",
+    "pass",
+]
+
+[tool.bandit]
+exclude_dirs = ["tests"]

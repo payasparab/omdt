@@ -1,0 +1,129 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        type: choice
+        options:
+          - staging
+          - prod
+      skip_approval:
+        description: "Skip approval gate (staging only)"
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: deploy-${{ github.event.inputs.environment || 'staging' }}
+  cancel-in-progress: false
+
+jobs:
+  # ---------------------------------------------------------------
+  # 1. Run full CI suite before any deployment
+  # ---------------------------------------------------------------
+  ci:
+    name: CI gate
+    uses: ./.github/workflows/ci.yml
+
+  # ---------------------------------------------------------------
+  # 2. Build deployment artifact
+  # ---------------------------------------------------------------
+  build:
+    name: Build artifact
+    needs: ci
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Build wheel
+        run: python -m build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: omdt-dist
+          path: dist/
+          retention-days: 7
+
+  # ---------------------------------------------------------------
+  # 3. Deploy to staging
+  # ---------------------------------------------------------------
+  deploy-staging:
+    name: Deploy to staging
+    needs: build
+    runs-on: ubuntu-latest
+    environment: staging
+    if: >-
+      github.event_name == 'push'
+      || github.event.inputs.environment == 'staging'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: omdt-dist
+          path: dist/
+
+      - name: Deploy to Render (staging)
+        run: |
+          echo "TODO: Deploy to Render staging"
+          # curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_STAGING }}"
+
+      - name: Post-deploy smoke tests
+        run: |
+          echo "TODO: Run smoke tests against staging URL"
+          # curl -f "${{ secrets.STAGING_URL }}/api/v1/health"
+
+      - name: Notify
+        run: |
+          echo "TODO: Send deployment notification (Outlook / Linear)"
+
+  # ---------------------------------------------------------------
+  # 4. Deploy to production (requires approval)
+  # ---------------------------------------------------------------
+  deploy-prod:
+    name: Deploy to production
+    needs: build
+    runs-on: ubuntu-latest
+    environment: prod  # GitHub environment with required reviewers
+    if: >-
+      github.event_name == 'workflow_dispatch'
+      && github.event.inputs.environment == 'prod'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: omdt-dist
+          path: dist/
+
+      - name: Deploy to Render (prod)
+        run: |
+          echo "TODO: Deploy to Render production"
+          # curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_PROD }}"
+
+      - name: Post-deploy smoke tests
+        run: |
+          echo "TODO: Run smoke tests against prod URL"
+          # curl -f "${{ secrets.PROD_URL }}/api/v1/health"
+
+      - name: Notify
+        run: |
+          echo "TODO: Send deployment notification (Outlook / Linear)"

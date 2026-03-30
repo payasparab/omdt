@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: Lint, Type-check, Test & Security
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Validate config files
+        run: python -m app.cli.main config validate
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Format check
+        run: ruff format --check .
+
+      - name: Type check
+        run: mypy app/
+
+      - name: Unit tests
+        run: pytest tests/unit/ --cov=app --cov-report=xml -q
+
+      - name: Contract tests
+        run: |
+          if [ -d tests/contract ] && [ "$(find tests/contract -name 'test_*.py' | head -1)" ]; then
+            pytest tests/contract/ -q
+          else
+            echo "No contract tests found — skipping"
+          fi
+
+      - name: Workflow tests
+        run: pytest tests/workflows/ -q
+
+      - name: Config tests
+        run: pytest tests/config/ -q
+
+      - name: Migration tests
+        run: |
+          if [ -d tests/migrations ] && [ "$(find tests/migrations -name 'test_*.py' | head -1)" ]; then
+            pytest tests/migrations/ -q
+          else
+            echo "No migration tests found — skipping"
+          fi
+
+      - name: Security scan
+        run: bandit -r app/ -c pyproject.toml
+
+      - name: Dependency audit
+        run: pip-audit
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.xml
+          retention-days: 30
